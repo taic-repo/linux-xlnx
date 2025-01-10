@@ -66,6 +66,23 @@ _save_context:
 	REG_S s4, PT_CAUSE(sp)
 	REG_S s5, PT_TP(sp)
 
+#ifdef CONFIG_RISCV_UINTR
+	# Save uintr registers
+	csrr s6, CSR_UIP
+	csrr s7, CSR_UIE
+	csrr s8, CSR_UTVEC
+	csrr s9, CSR_USCRATCH
+	csrr s10, CSR_UEPC
+	REG_S s6, PT_UIP(sp)
+	REG_S s7, PT_UIE(sp)
+	REG_S s8, PT_UTVEC(sp)
+	REG_S s9, PT_USCRATCH(sp)
+	REG_S s10, PT_UEPC(sp)
+
+	move a0, sp
+	call riscv_uintr_clear
+#endif
+
 	/*
 	 * Set the scratch register to 0, so that if a recursive exception
 	 * occurs, the exception vector knows it came from the kernel
@@ -118,6 +135,10 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
 	andi s0, s0, SR_SPP
 #endif
 	bnez s0, 1f
+
+	// restore the user csrs
+	move a0, sp
+	call riscv_uintr_set
 
 	/* Save unwound kernel stack pointer in thread_info */
 	addi s0, sp, PT_SIZE_ON_STACK

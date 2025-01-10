@@ -25,6 +25,7 @@
 #include <asm/thread_info.h>
 #include <asm/cpuidle.h>
 #include <asm/vector.h>
+#include <asm/uintr.h>
 
 register unsigned long gp_in_global __asm__("gp");
 
@@ -206,4 +207,11 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
 	p->thread.ra = (unsigned long)ret_from_fork;
 	p->thread.sp = (unsigned long)childregs; /* kernel sp */
 	return 0;
+}
+
+void exit_thread(struct task_struct *tsk)
+{
+	// pr_info("exit_thread: %s\n", tsk->comm);
+	if(tsk->thread.is_uintr_enabled)
+		taic_free_lq(tsk->thread.lq_idx);
 }

@@ -82,6 +82,10 @@ struct thread_struct {
 	unsigned long bad_cause;
 	unsigned long vstate_ctrl;
 	struct __riscv_v_ext_state vstate;
+#ifdef CONFIG_RISCV_UINTR
+	unsigned long lq_idx;
+	bool is_uintr_enabled;
+#endif
 };
 
 /* Whitelist the fstate from the task_struct for hardened usercopy */

@@ -118,6 +118,7 @@ config RISCV
 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
 	select HAVE_EBPF_JIT if MMU
 	select HAVE_FUNCTION_ARG_ACCESS_API
+	select HAVE_EXIT_THREAD if RISCV_UINTR
 	select HAVE_FUNCTION_ERROR_INJECTION
 	select HAVE_GCC_PLUGINS
 	select HAVE_GENERIC_VDSO if MMU && 64BIT
@@ -154,6 +155,7 @@ config RISCV
 	select PCI_MSI if PCI
 	select RISCV_ALTERNATIVE if !XIP_KERNEL
 	select RISCV_INTC
+	select RISCV_TAIC if RISCV_UINTR
 	select RISCV_TIMER if RISCV_SBI
 	select SIFIVE_PLIC
 	select SPARSE_IRQ
@@ -898,6 +900,10 @@ config PORTABLE
 	select EFI
 	select MMU
 	select OF
+
+config RISCV_UINTR
+	bool "User Interrupt Support"
+	default y
 
 menu "Power management options"
 

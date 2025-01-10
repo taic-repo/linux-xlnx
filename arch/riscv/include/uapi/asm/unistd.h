@@ -52,3 +52,14 @@ __SYSCALL(__NR_riscv_flush_icache, sys_riscv_flush_icache)
 #define __NR_riscv_hwprobe (__NR_arch_specific_syscall + 14)
 #endif
 __SYSCALL(__NR_riscv_hwprobe, sys_riscv_hwprobe)
+
+#ifdef CONFIG_RISCV_UINTR
+
+#ifndef __NR_riscv_uintr_enable
+#define __NR_riscv_uintr_enable (__NR_arch_specific_syscall + 0)
+#endif
+__SYSCALL(__NR_riscv_uintr_enable, sys_uintr_enable)
+
+
+
+#endif
